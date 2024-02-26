@@ -52,4 +52,4 @@ spring:
 #logging configuration
 logging:
   level:
-    root: ${LOGGING_CONFIGURATION_APP:debug}
+    root: ${LOGGING_CONFIGURATION_APP:info}

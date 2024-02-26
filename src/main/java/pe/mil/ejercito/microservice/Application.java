@@ -1,7 +1,10 @@
 package pe.mil.ejercito.microservice;
 
+import lombok.extern.log4j.Log4j2;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * Application
@@ -16,10 +19,20 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @author bacsystem.sac@gmail.com
  * @since 20/02/2024
  */
-
-@SpringBootApplication
+@Log4j2
+@RestController
+@SpringBootApplication(
+        scanBasePackages = "pe.mil.ejercito.microservice"
+)
 public class Application {
+
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
     }
+
+    @GetMapping("/hello")
+    public String hello() {
+        return String.format("Hello %s!", "name");
+    }
+
 }
