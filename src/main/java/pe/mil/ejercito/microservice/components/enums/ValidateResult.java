@@ -1,4 +1,4 @@
-package pe.mil.ejercito.microservice.components.interceptor.enums;
+package pe.mil.ejercito.microservice.components.enums;
 
 /**
  * ValidateResult
