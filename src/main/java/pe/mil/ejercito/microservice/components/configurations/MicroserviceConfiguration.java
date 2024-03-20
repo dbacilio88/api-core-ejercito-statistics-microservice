@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.reactive.config.EnableWebFlux;
 import org.springframework.web.reactive.config.WebFluxConfigurer;
+import pe.mil.ejercito.microservice.components.properties.DataSourceProperties;
 import springfox.documentation.annotations.ApiIgnore;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.RequestHandlerSelectors;
@@ -40,7 +41,6 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableWebFlux
 @EnableAutoConfiguration(exclude = {WebMvcAutoConfiguration.class})
 public class MicroserviceConfiguration implements WebFluxConfigurer {
-    private static final String BXCODE_URL = "http://localhost:8080";
     TypeResolver typeResolver;
     String appName;
     String appVersion;
@@ -95,6 +95,11 @@ public class MicroserviceConfiguration implements WebFluxConfigurer {
                 .version(appName)
                 .title(appVersion)
                 .build();
+    }
+
+    @Bean
+    public DataSourceProperties dataSourceProperties() {
+        return new DataSourceProperties();
     }
 
 }

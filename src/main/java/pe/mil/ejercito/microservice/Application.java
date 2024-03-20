@@ -21,9 +21,10 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @Log4j2
 @RestController
-@SpringBootApplication(
-        scanBasePackages = "pe.mil.ejercito.microservice"
-)
+@SpringBootApplication(scanBasePackages = {
+        "pe.mil.ejercito.microservice",
+        "com.bxcode.tools.loader",
+})
 public class Application {
 
     public static void main(String[] args) {

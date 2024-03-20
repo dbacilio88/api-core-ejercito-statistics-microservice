@@ -1,6 +1,6 @@
 #server configuration:
 server:
-  port: 8080
+  port: 8081
   compression:
     enabled: true
   tomcat:
@@ -24,6 +24,13 @@ spring:
   mvc:
     converters:
       preferred-json-mapper: jsonb
+  servlet:
+    multipart:
+      enabled: true
+      file-size-threshold: 2KB
+      max-file-size: 200MB
+      max-request-size: 215MB
+
   jpa:
     open-in-view: false
     show-sql: false
@@ -53,3 +60,22 @@ spring:
 logging:
   level:
     root: ${LOGGING_CONFIGURATION_APP:info}
+
+#developer configuration:
+developer:
+  nickname: cbacilio
+
+#microservice configuration:
+microservice:
+  key: 524be2fc-9995-4ab0-98c6-8d2e16502522
+  datasource:
+    name: microservice.datasource.ep.solutions
+    encryption-enable: true
+    encryption-key: true
+  configuration:
+    domain: http://localhost:8080
+    type: microservice.configuration.type.json.file
+  error-handler: ERROR_HANDLER_LINK_NOT_DEFINED
+  messages:
+    path: "/json/messages.json"
+    index: "01"
