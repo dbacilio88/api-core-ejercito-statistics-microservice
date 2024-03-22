@@ -1,6 +1,6 @@
 package pe.mil.ejercito.microservice.components.helpers;
 
-/**
+/*
  * DocumentProcessHelper
  * <p>
  * DocumentProcessHelper class.
