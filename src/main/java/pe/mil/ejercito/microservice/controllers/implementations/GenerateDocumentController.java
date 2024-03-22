@@ -18,6 +18,8 @@ import pe.mil.ejercito.microservice.services.contracts.IGenerateDocumentService;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import javax.validation.Valid;
+
 /**
  * GenerateDocumentController
  * <p>
@@ -46,15 +48,21 @@ public class GenerateDocumentController extends ReactorControllerBase implements
 
     @Override
     @PostMapping(path = "/upload-excel", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public Mono<ResponseEntity<Object>> doOnGenerateFile(@RequestBody Flux<Part> file) {
+    public Mono<ResponseEntity<Object>> doOnGenerateFile(@Valid @RequestBody Flux<Part> file) {
         return file
                 .filter(FilePart.class::isInstance)
                 .cast(FilePart.class)
                 .next()
                 .flatMap(filePart -> this.generateDocumentService.doOnFindConfigurationsFiles(GenerateDocumentComposition.builder()
+                        .division("AE")
+                        .type("HORAS_VUELO")
+                        .combinedCellNumber(2)
                         .filePart(filePart)
                         .build()))
-                .flatMap(super::response)
+                .flatMap(processResponse -> {
+                    log.info("processResponse {}", processResponse);
+                    return super.response(processResponse);
+                })
                 .onErrorResume(WebExchangeBindException.class, Mono::error)
                 .doOnSuccess(success -> log.info("MICROSERVICE_CONTROLLER_DOMAIN_ENTITY_FIND_ALL_FORMAT_SUCCESS"))
                 .doOnError(throwable -> log.error(throwable.getMessage()));

@@ -2,7 +2,8 @@ package pe.mil.ejercito.microservice.dtos.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
-import pe.mil.ejercito.microservice.dtos.ExcelDataDto;
+import pe.mil.ejercito.microservice.dtos.ExcelDataCombinedDto;
+import pe.mil.ejercito.microservice.dtos.ExcelDataSimpleDto;
 
 import java.io.Serializable;
 import java.util.List;
@@ -30,8 +31,12 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class GenerateDocumentResponse implements Serializable {
     private static final long serialVersionUID = 84440509247931788L;
-    private String name;
-    private List<ExcelDataDto> excel;
+    private String fileName;
+    private String headerCombined;
+    private String headerSimple;
+    private List<ExcelDataSimpleDto> simples;
+    private List<ExcelDataCombinedDto> combined;
+    private List<String[]> rowData;
 }
 
 

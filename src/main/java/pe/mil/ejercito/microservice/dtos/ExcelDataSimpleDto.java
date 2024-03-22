@@ -6,9 +6,9 @@ import lombok.*;
 import java.io.Serializable;
 
 /**
- * ExcelDataDto
+ * ExcelDataSimpleDto
  * <p>
- * ExcelDataDto class.
+ * ExcelDataSimpleDto class.
  * <p>
  * THIS COMPONENT WAS BUILT ACCORDING TO THE DEVELOPMENT STANDARDS
  * AND THE BXCODE APPLICATION DEVELOPMENT PROCEDURE AND IS PROTECTED
@@ -26,11 +26,16 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ExcelDataDto implements Serializable {
+public class ExcelDataSimpleDto implements Serializable {
     private static final long serialVersionUID = -3233799298685084546L;
-
     private String name;
-    private String edad;
+    private String charge;
+    private String personal;
+    private String logistic;
+    private String security;
+    private String guard;
+    private String age;
+    private String grade;
+    private String instruction;
+    private String data;
 }
-
-

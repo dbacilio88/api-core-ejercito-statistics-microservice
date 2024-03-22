@@ -3,6 +3,7 @@ package pe.mil.ejercito.microservice.dtos;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 import org.springframework.http.codec.multipart.FilePart;
+import pe.mil.ejercito.microservice.components.enums.ExtensionType;
 import pe.mil.ejercito.microservice.dtos.response.GenerateDocumentResponse;
 
 import java.io.File;
@@ -35,12 +36,21 @@ public class GenerateDocumentComposition implements Serializable {
     private static final long serialVersionUID = -5611867036302046507L;
 
     private transient FilePart filePart;
-    private String contentType;
+    private String fileExtension;
     private String tempFile;
     private String fileName;
+    private ExtensionType extensionType;
+
+    private String division;
+    private String type;
+    private String contentType;
     private transient Path pathFile;
     private File file;
     private GenerateDocumentResponse documentResponse;
+    private boolean combinedRow;
+    private boolean combinedCell;
+    private int combinedCellNumber;
+    private int combinedRowNumber;
 
 }
 

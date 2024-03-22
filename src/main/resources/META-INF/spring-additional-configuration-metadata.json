@@ -1,0 +1,9 @@
+{
+  "properties": [
+    {
+      "name": "developer.nickname",
+      "type": "java.lang.String",
+      "description": "Description for developer."
+    }
+  ]
+}
