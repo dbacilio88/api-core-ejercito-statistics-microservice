@@ -13,7 +13,8 @@ import reactor.core.scheduler.Schedulers;
 
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * DocumentProcessTxtHelper
@@ -72,68 +73,59 @@ public class DocumentProcessExcelHelper {
                 })
                 .doOnSuccess(success -> log.debug("doOnCreateWorkbook"))
                 .doOnError(throwable -> log.error(throwable.getMessage()));
-
     }
 
     private void processSheetCombined(final Sheet sheet,
                                       final GenerateDocumentResponse documentResponse,
                                       final GenerateDocumentComposition documentComposition) {
-        Set<String> headers = new HashSet<>();
-        processExcel(sheet, documentResponse, documentComposition, headers, false, false);
-        documentResponse.setHeaderCombined(convertirSetAString(headers));
-
+        processExcel(sheet, documentResponse, documentComposition);
     }
+
 
     private void processExcel(final Sheet sheet,
                               final GenerateDocumentResponse documentResponse,
-                              final GenerateDocumentComposition documentComposition,
-                              final Set<String> headers, final boolean isCombinedRow,
-                              final boolean isCombinedCell) {
-
-        int rowNum = 0;
-
+                              final GenerateDocumentComposition documentComposition) {
         int combinedCount = countCellCombined(sheet, documentComposition.getCombinedCellNumber());
-        do {
-            Row row = sheet.getRow(rowNum);
-            if (row != null) {
-                for (Cell cell : row) {
-                    if (isCellCombined(sheet, rowNum, cell.getColumnIndex())) {
-                        String value = getCellCombinedValue(sheet, cell);
-                        headers.add(value);
-                    } else {
-                        String value = getCellValueAsString(cell);
-                        headers.add(value);
-                    }
+        readAndSetHeaders(sheet, combinedCount, documentResponse);
+        readAndSetRowData(sheet, combinedCount, documentResponse);
+    }
 
-                }
+    private void readAndSetHeaders(Sheet sheet, int combinedCount, GenerateDocumentResponse documentResponse) {
+        int rowNum = 0;
+        if (combinedCount > 0) {
+            Row headerRow = sheet.getRow(rowNum);
+            if (headerRow != null) {
+                String[] cellData = readRowData(sheet, headerRow);
+                documentResponse.setHeader(cellData);
             }
-            rowNum++;
-        } while (rowNum < combinedCount);
+        }
+    }
 
-        int elements = sheet.getPhysicalNumberOfRows() - rowNum;
+    private void readAndSetRowData(Sheet sheet, int combinedCount, GenerateDocumentResponse documentResponse) {
         List<String[]> list = new ArrayList<>();
-
-
-        for (; rowNum < sheet.getPhysicalNumberOfRows(); rowNum++) {
-
+        for (int rowNum = combinedCount; rowNum < sheet.getPhysicalNumberOfRows(); rowNum++) {
             Row row = sheet.getRow(rowNum);
             if (row != null) {
-                int cellNum = 0;
-                String[] cellData = new String[row.getPhysicalNumberOfCells()];
-                for (Cell cell : row) {
-                    if (isCellCombined(sheet, rowNum, cell.getColumnIndex())) {
-                        cellData[cellNum] = getCellCombinedValue(sheet, cell);
-                    } else {
-                        cellData[cellNum] = getCellValueAsString(cell);
-                    }
-                    cellNum++;
-                }
+                String[] cellData = readRowData(sheet, row);
                 list.add(cellData);
             }
         }
         documentResponse.setRowData(list);
     }
 
+    private String[] readRowData(Sheet sheet, Row row) {
+        String[] cellData = new String[row.getPhysicalNumberOfCells()];
+        int cellNum = 0;
+        for (Cell cell : row) {
+            if (isCellCombined(sheet, row.getRowNum(), cell.getColumnIndex())) {
+                cellData[cellNum] = getCellCombinedValue(sheet, cell);
+            } else {
+                cellData[cellNum] = getCellValueAsString(cell);
+            }
+            cellNum++;
+        }
+        return cellData;
+    }
 
     private String getCellValueAsString(Cell cell) {
         String cellValue = null;
@@ -146,7 +138,6 @@ public class DocumentProcessExcelHelper {
                     cellValue = processStringCell(cell);
                     break;
                 default:
-                    processDefaultCell(cell);
                     cellValue = "";
             }
         }
@@ -161,11 +152,6 @@ public class DocumentProcessExcelHelper {
         return cell.getStringCellValue();
     }
 
-    private void processDefaultCell(Cell cell) {
-        log.debug("no data o cell type blank {}", cell);
-
-    }
-
     private String getCellCombinedValue(Sheet sheet, Cell cell) {
         int rowNum = cell.getRowIndex();
         int colNum = cell.getColumnIndex();
@@ -178,7 +164,6 @@ public class DocumentProcessExcelHelper {
         }
         return null;
     }
-
 
     private int countCellCombined(Sheet sheet, int rows) {
         int count = 0;
@@ -203,18 +188,4 @@ public class DocumentProcessExcelHelper {
         }
         return false;
     }
-
-    private String convertirSetAString(Set<String> set) {
-        StringBuilder builder = new StringBuilder();
-        Iterator<String> iterator = set.iterator();
-        while (iterator.hasNext()) {
-            builder.append(iterator.next());
-            if (iterator.hasNext()) {
-                builder.append(", ");
-            }
-        }
-        return builder.toString();
-    }
 }
-
-

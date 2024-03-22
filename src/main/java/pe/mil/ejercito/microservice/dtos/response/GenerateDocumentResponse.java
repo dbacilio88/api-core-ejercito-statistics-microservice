@@ -32,8 +32,8 @@ import java.util.List;
 public class GenerateDocumentResponse implements Serializable {
     private static final long serialVersionUID = 84440509247931788L;
     private String fileName;
-    private String headerCombined;
-    private String headerSimple;
+    private String headers;
+    private String[] header;
     private List<ExcelDataSimpleDto> simples;
     private List<ExcelDataCombinedDto> combined;
     private List<String[]> rowData;

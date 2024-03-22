@@ -28,6 +28,7 @@ import java.util.Optional;
 public enum ExtensionType {
 
     EXCEL_XLSX("xlsx", "temp.xlsx"),
+    EXCEL_XLS("xls", "temp.xls"),
     WORD("", ""),
     PPT("", ""),
     PDF("", ""),
@@ -50,8 +51,7 @@ public enum ExtensionType {
     }
 
     public static Optional<ExtensionType> findByValue(String code) {
-        log.info("value {}-{}", code, StringUtils.isNoneBlank(code));
-        return StringUtils.isNoneBlank(code) ? Optional.of(MAP_ENUM.get(code)) : Optional.empty();
+        return (StringUtils.isNoneBlank(code) && MAP_ENUM.containsKey(code)) ? Optional.of(MAP_ENUM.get(code)) : Optional.empty();
     }
 
 }

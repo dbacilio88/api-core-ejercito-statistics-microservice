@@ -59,7 +59,7 @@ spring:
 #logging configuration
 logging:
   level:
-    root: ${LOGGING_CONFIGURATION_APP:info}
+    root: ${LOGGING_CONFIGURATION_APP:debug}
 
 #developer configuration:
 developer:

@@ -24,16 +24,17 @@ import reactor.core.publisher.Mono;
 public class DocumentProcessHelper {
 
     public static Mono<GenerateDocumentComposition> doOnGenerateDocumentComposition(GenerateDocumentComposition documentComposition) {
-        return doOnselectTypeDocument(documentComposition)
+        return doOnSelectTypeDocument(documentComposition)
                 .doOnSuccess(success -> log.debug("doOnGenerateDocumentComposition"))
                 .doOnError(throwable -> log.error(throwable.getMessage()));
     }
 
-    private Mono<GenerateDocumentComposition> doOnselectTypeDocument(GenerateDocumentComposition documentComposition) {
+    private Mono<GenerateDocumentComposition> doOnSelectTypeDocument(GenerateDocumentComposition documentComposition) {
         return Mono.just(documentComposition)
                 .flatMap(currentComposition -> {
                     switch (currentComposition.getExtensionType()) {
                         case EXCEL_XLSX:
+                        case EXCEL_XLS:
                             return DocumentProcessExcelHelper.doOnReadDocumentExcel(documentComposition);
                         case TXT:
                             return doOnProcessDocumentTxt(documentComposition);
@@ -41,7 +42,7 @@ public class DocumentProcessHelper {
                             return Mono.just(currentComposition);
                     }
                 })
-                .doOnSuccess(success -> log.debug("doOnselectTypeDocument"))
+                .doOnSuccess(success -> log.debug("doOnSelectTypeDocument"))
                 .doOnError(throwable -> log.error(throwable.getMessage()));
     }
 

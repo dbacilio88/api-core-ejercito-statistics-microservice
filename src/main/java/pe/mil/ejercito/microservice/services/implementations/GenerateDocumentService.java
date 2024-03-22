@@ -21,6 +21,7 @@ import reactor.core.publisher.Mono;
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -75,7 +76,8 @@ public class GenerateDocumentService extends ReactorServiceBase implements IGene
                 .flatMap(currentComposition -> {
                     Optional<ExtensionType> extensionType = ExtensionType.findByValue(currentComposition.getFileExtension());
                     if (extensionType.isEmpty()) {
-                        return Mono.error(() -> new CommonException("error in extension file not found", ResponseEnum.ERROR_INVALID_REQUEST_DATA, null));
+                        String message = "error in extension file not found";
+                        return Mono.error(() -> new CommonException(message, ResponseEnum.ERROR_INVALID_REQUEST_DATA, List.of(message)));
                     }
                     currentComposition.setTempFile(extensionType.get().getValue());
                     currentComposition.setExtensionType(extensionType.get());
@@ -103,7 +105,7 @@ public class GenerateDocumentService extends ReactorServiceBase implements IGene
     }
 
     private Mono<GenerateDocumentComposition> doOnExecuteProcess(GenerateDocumentComposition documentComposition) {
-        log.debug("STEP # 3 do on execute process");
+        log.debug("STEP # 4 do on execute process");
         return Mono.just(documentComposition)
                 .flatMap(DocumentProcessHelper::doOnGenerateDocumentComposition)
                 .doOnSuccess(success -> log.debug("doOnExecuteProcess"))
@@ -111,7 +113,7 @@ public class GenerateDocumentService extends ReactorServiceBase implements IGene
     }
 
     public Mono<ProcessResponse> doOnProcessResponse(GenerateDocumentComposition documentComposition) {
-        log.debug("STEP # 4 do on process response");
+        log.debug("STEP # 5 do on process response");
         return Mono.just(documentComposition)
                 .flatMap(processResponse -> {
                     final GenericResponse<GenerateDocumentResponse> response = new GenericResponse<>(processResponse.getDocumentResponse());

@@ -56,7 +56,7 @@ public class GenerateDocumentController extends ReactorControllerBase implements
                 .flatMap(filePart -> this.generateDocumentService.doOnFindConfigurationsFiles(GenerateDocumentComposition.builder()
                         .division("AE")
                         .type("HORAS_VUELO")
-                        .combinedCellNumber(2)
+                        .combinedCellNumber(1)
                         .filePart(filePart)
                         .build()))
                 .flatMap(processResponse -> {
